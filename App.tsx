@@ -1,15 +1,51 @@
-import React, { useState } from 'react';
-import Login from './src/screens/Login';
-import Register from './src/screens/Register';
-import Splash from './src/screens/SplashScreen';
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+import SplashScreen from "./src/screens/SplashScreen";
+import Register from "./src/screens/Register";
+import Login from "./src/screens/Login";
+import Main from "./src/screens/Main";
+
+
+export type RootStackParamList = {
+  Splash: undefined;
+  Register: undefined;
+  Login: undefined;
+  Main: undefined;
+};
+
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Splash">
+        <Stack.Screen
+          name="Splash"
+          component={SplashScreen}
+          options={{ headerShown: false }}
+        />
 
-  const [showSplash, setShowSplash] = useState(true);
+        <Stack.Screen
+          name="Register"
+          component={Register}
+          options={{ headerShown: false }}
+        />
 
-  if (showSplash){
-    return <Splash onFinish={() => setShowSplash(false)} />;
-  }
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ headerShown: false }}
+        />
 
-  return <Register />
+        <Stack.Screen
+          name="Main"
+          component={Main}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 }

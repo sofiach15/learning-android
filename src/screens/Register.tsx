@@ -26,6 +26,8 @@ import {
 import type { PostgrestError } from '@supabase/supabase-js';
 import { supabase } from '../../lib/supabase';
 import bcrypt from 'bcryptjs';
+import { useNavigation } from '@react-navigation/native';
+
 
 // Fallback de emergencia para bcryptjs
 if (!global.crypto || !global.crypto.getRandomValues) {
@@ -37,6 +39,12 @@ if (!global.crypto || !global.crypto.getRandomValues) {
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const navigation = useNavigation();
+Alert.alert('Sucess', 'User registrado satisfactoriamente');
+resetForm();
+navigation.navigate('Login' as never);
+
 
 const Register: React.FC = () => {
   const [firstname, setFirstname] = useState('');

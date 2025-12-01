@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -9,7 +9,9 @@ import {
   TouchableOpacity,
   Modal,
 } from "react-native";
+
 import MainMenu from "./MainMenu";
+import Home from "./Home";
 
 interface Product {
   id: number;
@@ -31,6 +33,11 @@ export default function Main() {
     if (selectedScreen === "Products") {
       fetchProducts();
     }
+  };
+
+  const handleLogout = () => {
+    alert("Cerrando sesión...");
+    setScreen("Home");
   };
 
   const fetchProducts = async () => {
@@ -65,9 +72,14 @@ export default function Main() {
       {/* Menú hamburguesa */}
       <MainMenu onNavigate={handleNavigate} />
 
-      {/* Contenido principal */}
-      {screen === "Products" ? (
-        loading ? (
+      {/* HOME */}
+      {screen === "Home" && (
+        <Home onNavigate={handleNavigate} onLogout={handleLogout} />
+      )}
+
+      {/* PRODUCTS */}
+      {screen === "Products" &&
+        (loading ? (
           <ActivityIndicator
             size="large"
             color="#007BFF"
@@ -79,16 +91,27 @@ export default function Main() {
             keyExtractor={(item) => item.id.toString()}
             renderItem={renderProduct}
             contentContainerStyle={styles.list}
-            style={{ flex: 1 }} // Esto permite el scroll
+            style={{ flex: 1 }}
           />
-        )
-      ) : (
+        ))}
+
+      {/* Otras pantallas */}
+      {screen !== "Home" &&
+        screen !== "Products" &&
+        screen !== "Logout" && (
+          <View style={styles.home}>
+            <Text style={styles.homeText}>Welcome to {screen}</Text>
+          </View>
+        )}
+
+      {/* Logout */}
+      {screen === "Logout" && (
         <View style={styles.home}>
-          <Text style={styles.homeText}>Welcome to {screen}</Text>
+          <Text style={styles.homeText}>Logging out…</Text>
         </View>
       )}
 
-      {/* Modal de producto */}
+      {/* Modal */}
       <Modal
         visible={modalVisible}
         animationType="slide"
@@ -157,9 +180,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
     elevation: 5,
   },
   image: {

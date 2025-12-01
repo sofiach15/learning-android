@@ -1,11 +1,3 @@
-/*
-  Login.tsx
-  React Native login screen matching style/structure of your Register.tsx.
-  Requisitos:
-    npm install react-native-get-random-values
-    expo install react-native-get-random-values   # si usas Expo
-*/
-
 import 'react-native-get-random-values';
 import React, { useState } from 'react';
 import {
@@ -21,12 +13,15 @@ import {
   ScrollView,
 } from 'react-native';
 import { supabase } from '../../lib/supabase';
-import { useRouter } from 'expo-router';
+
+import { useNavigation } from '@react-navigation/native';
+import { NavigationProp } from '@react-navigation/native';
+import { RootStackParamList } from '../../App'; 
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const Login: React.FC = () => {
-  const router = useRouter();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -55,7 +50,6 @@ const Login: React.FC = () => {
     focused === name ? styles.inputFocus.borderColor : styles.input.borderColor;
 
   const handleSignIn = async () => {
-    // marcar touched para mostrar errores si no ha interactuado
     setTouched({ email: true, password: true });
 
     const err = validateAll();
@@ -73,14 +67,12 @@ const Login: React.FC = () => {
       });
 
       if (error) {
-        // supabase puede regresar errores como PostgrestError o auth error
         throw error;
       }
 
-      // login exitoso
       Alert.alert('Success', 'Signed in successfully');
-      // Redirigir a la pantalla principal (ajusta la ruta según tu app)
-      router.push('/home');
+
+      navigation.navigate('Home' as never);
     } catch (e: any) {
       const message = e?.message || 'Unknown error';
       console.error('Login failed:', e);
@@ -91,8 +83,7 @@ const Login: React.FC = () => {
   };
 
   const goToRegister = () => {
-    // Ajusta la ruta si tu archivo de register está en otra ruta
-    router.push('/Register');
+    navigation.navigate('Register');
   };
 
   return (
